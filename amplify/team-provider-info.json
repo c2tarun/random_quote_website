@@ -1,0 +1,14 @@
+{
+    "default": {
+        "awscloudformation": {
+            "AuthRoleName": "quotewebsite-20190421180102-authRole",
+            "UnauthRoleArn": "arn:aws:iam::177947046032:role/quotewebsite-20190421180102-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::177947046032:role/quotewebsite-20190421180102-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "quotewebsite-20190421180102-deployment",
+            "UnauthRoleName": "quotewebsite-20190421180102-unauthRole",
+            "StackName": "quotewebsite-20190421180102",
+            "StackId": "arn:aws:cloudformation:us-west-2:177947046032:stack/quotewebsite-20190421180102/1995ce20-649a-11e9-b8f2-02c3ece5f9fa"
+        }
+    }
+}
