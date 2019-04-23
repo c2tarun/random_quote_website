@@ -4,13 +4,6 @@
       <h1>{{ quote }}</h1>
       <h3>{{ by }}</h3>
       <button class="button" v-on:click="nextQuote">More</button>
-      <br>
-      {{ accessKey }}
-      <br>
-      {{ secretKey }}
-      <br>
-      {{ sessionToken }}
-      <br>
     </div>
     <div v-else>
       <MissingAuth/>
@@ -49,40 +42,19 @@ export default {
   },
   methods: {
     nextQuote() {
-      this.quote = "Loading...";
-      this.by = "";
-      const accessKeyId = this.$store.state.userCredentials.accessKeyId;
-      const secretAccessKey = this.$store.state.userCredentials.secretAccessKey;
-      const sessionToken = this.$store.state.userCredentials.sessionToken;
-
-      console.log(accessKeyId, secretAccessKey, sessionToken);
-      console.log(this.$host);
-
-      var request = {
-        host: this.$host,
-        method: "GET",
-        url: this.$apiEndpoint,
-        path: "/test",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      };
-
-      let signedRequest = aws4.sign(request, {
-        accessKeyId,
-        secretAccessKey,
-        sessionToken
-      });
-
-      console.log(signedRequest);
-      delete signedRequest.headers["Host"];
-      axios(signedRequest)
+      var apigClient = apigClientFactory.newClient({
+            invokeUrl: this.$apiEndpoint,
+            accessKey: this.accessKey,
+            secretKey: this.secretKey,
+            sessionToken: this.sessionToken,
+            region: 'us-west-2'
+        });
+        apigClient.quoteGet()
         .then(response => {
-          this.quote = response.data.quote;
-          this.by = response.data.by;
-        })
-        .catch(err => console.log("failure: ", err));
-    }
+          this.quote = response.data.quote,
+          this.by = response.data.by
+        });
+    },
   },
   created() {
     this.nextQuote();
