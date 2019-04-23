@@ -4,6 +4,13 @@
       <h1>{{ quote }}</h1>
       <h3>{{ by }}</h3>
       <button class="button" v-on:click="nextQuote">More</button>
+      <br>
+      {{ accessKey }}
+      <br>
+      {{ secretKey }}
+      <br>
+      {{ sessionToken }}
+      <br>
     </div>
     <div v-else>
       <MissingAuth/>
@@ -29,19 +36,36 @@ export default {
   computed: {
     signedIn() {
       return this.$store.state.signedIn;
+    },
+    accessKey() {
+      return this.$store.state.userCredentials.accessKeyId;
+    },
+    secretKey() {
+      return this.$store.state.userCredentials.secretAccessKey;
+    },
+    sessionToken() {
+      return this.$store.state.userCredentials.sessionToken;
     }
   },
   methods: {
     nextQuote() {
-      this.quote = 'Loading...';
-      this.by = '';
+      this.quote = "Loading...";
+      this.by = "";
       const accessKeyId = this.$store.state.userCredentials.accessKeyId;
       const secretAccessKey = this.$store.state.userCredentials.secretAccessKey;
       const sessionToken = this.$store.state.userCredentials.sessionToken;
 
+      console.log(accessKeyId, secretAccessKey, sessionToken);
+      console.log(this.$host);
+
       var request = {
+        host: this.$host,
         method: "GET",
-        url: this.$apiEndpoint
+        url: this.$apiEndpoint,
+        path: "/test",
+        headers: {
+          "Content-Type": "application/json"
+        }
       };
 
       let signedRequest = aws4.sign(request, {
@@ -50,12 +74,12 @@ export default {
         sessionToken
       });
 
+      console.log(signedRequest);
       delete signedRequest.headers["Host"];
-
       axios(signedRequest)
         .then(response => {
-            this.quote = response.data.quote;
-            this.by = response.data.by;
+          this.quote = response.data.quote;
+          this.by = response.data.by;
         })
         .catch(err => console.log("failure: ", err));
     }
