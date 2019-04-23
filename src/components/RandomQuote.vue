@@ -42,6 +42,8 @@ export default {
   },
   methods: {
     nextQuote() {
+      this.quote = 'Loading...';
+      this.by = '';
       var apigClient = apigClientFactory.newClient({
             invokeUrl: this.$apiEndpoint,
             accessKey: this.accessKey,
